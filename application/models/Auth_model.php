@@ -2,8 +2,8 @@
 defined('BASEPATH') or exit('No direct script access allowed');
 class Auth_model extends CI_Model
 {
-    public $table = 'tbl_user';
-    public $id = 'tbl_user.user_id ';
+    public $table = 'admin';
+    public $id = 'admin.admin_id ';
    
     public function __construct()
     {
@@ -19,7 +19,7 @@ class Auth_model extends CI_Model
     public function getBy()
     { 
         $this->db->from($this->table);
-        $this->db->where('user_email', $this->session->userdata('email'));
+        $this->db->where('admin_email', $this->session->userdata('email'));
         $query = $this->db->get();
         return $query->row_array();
     }

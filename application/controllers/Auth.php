@@ -18,7 +18,7 @@ class Auth extends CI_Controller
     public function login()
     {
         if ($this->session->userdata('email')) {
-            redirect('/');
+            redirect('beranda');
         }
 
         $this->form_validation->set_rules('email', 'Email', 'trim|required|valid_email', [
@@ -31,21 +31,20 @@ class Auth extends CI_Controller
         ]);
 
         if ($this->form_validation->run() == false) {
-            $data['judul'] = "Sikos - Login";
+            $data['judul'] = "GalDelivery - Login";
             $this->load->view("auth/vw_login", $data);
         } else {
             $email = $this->input->post('email');
             $password = $this->input->post('password');
-            $user = $this->db->get_where('tbl_user', ['user_email' => $email])->row_array();
+            $user = $this->db->get_where('admin', ['admin_email' => $email])->row_array();
             if ($user) {
-                if (password_verify($password, $user['user_password'])) {
+                if (password_verify($password, $user['admin_password'])) {
                     $data = [
-                        'email' => $user['user_email'],
-                        'role' => $user['user_type'],
-                        'id' => $user['user_id'],
+                        'email' => $user['admin_email'],
+                        'id' => $user['admin_id'],
                     ];
                     $this->session->set_userdata($data);
-                    redirect('/');
+                    redirect('beranda');
                 } else {
                     $this->session->set_flashdata('message', '<div class="alert alert-danger" role="alert">Password Salah!</div>');
                     redirect('auth/login');
@@ -84,11 +83,9 @@ class Auth extends CI_Controller
             $this->load->view('auth/vw_register', $data);
         } else {
             $data = [
-                'user_nama' => $this->input->post('nama', true),
-                'user_email' => $this->input->post('email', true),
-                'user_password' => password_hash($this->input->post('password'), PASSWORD_DEFAULT),
-                'user_wa' => $this->input->post('nowa', true),
-                'user_type' => "pemilik",
+                'admin_nama' => $this->input->post('nama', true),
+                'admin_email' => $this->input->post('email', true),
+                'admin_password' => password_hash($this->input->post('password'), PASSWORD_DEFAULT),
             ];
             $this->Auth_model->insert($data);
             $this->session->set_flashdata('message', '<div class="alert alert-success" role="alert">Selamat!
